@@ -179,6 +179,10 @@ class OutgoingPayments(SecurityBase):
         )
         response = request = self.sign_request(request,("authorization",*get_default_covered_components()))
         self.http_client.send(request=request)
+        req_headers = {**self.get_auth_header(access_token=access_token)}
+        request = self.http_client.build_request(method="GET", url=url, headers=req_headers, params=query_params)
+        request = self.sign_request(request, ("authorization", *get_default_covered_components()))
+        response = self.http_client.send(request=request)
         return PaginatedOutgoingPayments.model_validate(response.json())
 
     def get_outgoing_payment(
