@@ -295,7 +295,7 @@ class GrantRequestAccessToken(BaseModel):
 
 class GrantRequest(BaseModel):
     access_token: GrantRequestAccessToken
-    client: Client
+    client: Optional[Client] = None
     interact: Optional[InteractRequest] = None
 
 class ReservedKeyMappingModel(BaseModel):

@@ -52,10 +52,12 @@ class PageInfo(BaseModel):
     startCursor: Optional[str] = Field(
         None,
         description="Cursor corresponding to the first element in the result array.",
+        min_length=1
     )
     endCursor: Optional[str] = Field(
         None,
         description="Cursor corresponding to the last element in the result array.",
+        min_length=1
     )
     hasNextPage: bool = Field(
         ..., description="Describes whether the data set has further entries."
@@ -145,12 +147,9 @@ class OutgoingPayment(BaseModel):
         None,
         description="Additional metadata associated with the outgoing payment. (Optional)",
     )
-    createdAt: datetime = Field(
-        ..., description="The date and time when the outgoing payment was created."
-    )
-    updatedAt: datetime = Field(
-        ..., description="The date and time when the outgoing payment was updated."
-    )
+    createdAt: datetime = Field(..., description="The date and time when the outgoing payment was created.")
+    updatedAt: Optional[datetime] = Field(None, description="The date and time when the outgoing payment was updated.")
+    model_config = ConfigDict()
 
 
 class OutgoingPaymentWithSpentAmounts(BaseModel):
@@ -258,12 +257,8 @@ class IncomingPayment(BaseModel):
         None,
         description="Additional metadata associated with the incoming payment. (Optional)",
     )
-    createdAt: datetime = Field(
-        ..., description="The date and time when the incoming payment was created."
-    )
-    updatedAt: datetime = Field(
-        ..., description="The date and time when the incoming payment was updated."
-    )
+    createdAt: datetime = Field(..., description="The date and time when the incoming payment was created.")
+    updatedAt: Optional[datetime] = Field(None, description="The date and time when the incoming payment was updated.")
 
 
 class IncomingPaymentWithMethods(IncomingPayment):
@@ -277,8 +272,8 @@ class IncomingPaymentWithMethods(IncomingPayment):
 class IncomingPaymentRequest(BaseModel):
     walletAddress: WalletAddress
     incomingAmount: Optional[Amount]
-    expiresAt: Optional[datetime]
-    metadata: Optional[Dict[str, Any]]
+    expiresAt: Optional[datetime] = None
+    metadata: Optional[Dict[str, Any]] = None
 
 
 class IncomingPaymentResponse(
