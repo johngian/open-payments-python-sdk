@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Annotated, Any, Dict, List, Literal, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Union
 
 from pydantic import (AnyUrl, BaseModel, ConfigDict, Field, HttpUrl, RootModel,
                       StringConstraints, conint, constr, field_validator)
@@ -15,10 +15,12 @@ class AssetCode(RootModel[str]):
 
 
 class AssetScale(RootModel[conint(ge=0, le=255)]):
-    root: conint(ge=0, le=255) = Field(
+    root: int = Field(
         ...,
         description="The scale of amounts denoted in the corresponding asset code.",
         title="Asset scale",
+        ge=0,
+        le=255
     )
 
 
@@ -47,11 +49,11 @@ class PageInfo(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    startCursor: Optional[constr(min_length=1)] = Field(
+    startCursor: Optional[str] = Field(
         None,
         description="Cursor corresponding to the first element in the result array.",
     )
-    endCursor: Optional[constr(min_length=1)] = Field(
+    endCursor: Optional[str] = Field(
         None,
         description="Cursor corresponding to the last element in the result array.",
     )
@@ -72,19 +74,22 @@ class Type(Enum):
 
 
 class IlpPaymentMethod(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
     type: Type
-    ilpAddress: constr(
+    ilpAddress: str = Field(
+        ...,
+        description="The ILP address to use when establishing a STREAM connection.",
         pattern=r"^(g|private|example|peer|self|test[1-3]?|local)([.][a-zA-Z0-9_~-]+)+$",
         max_length=1023,
     ) = Field(
         ..., description="The ILP address to use when establishing a STREAM connection."
     )
-    sharedSecret: constr(pattern=r"^[a-zA-Z0-9-_]+$") = Field(
+    sharedSecret: str = Field(
         ...,
         description="The base64 url-encoded shared secret to use when establishing a STREAM connection.",
+        pattern=r"^[a-zA-Z0-9-_]+$"
+    )
+    model_config = ConfigDict(
+        extra="forbid",
     )
 
 

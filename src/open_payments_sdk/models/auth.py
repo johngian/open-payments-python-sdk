@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Any, List, Optional, Union
 
-from pydantic import AnyUrl, BaseModel, ConfigDict, Field, RootModel, conint, model_validator, root_validator
+from pydantic import AnyUrl, BaseModel, ConfigDict, Field, RootModel, conint, model_validator
 
 
 class TypeIncoming(Enum):
@@ -165,10 +165,12 @@ class AssetCode(RootModel[str]):
 
 
 class AssetScale(RootModel[conint(ge=0, le=255)]):
-    root: conint(ge=0, le=255) = Field(
+    root: int = Field(
         ...,
         description="The scale of amounts denoted in the corresponding asset code.",
         title="Asset scale",
+        ge=0,
+        le=255
     )
 
 
