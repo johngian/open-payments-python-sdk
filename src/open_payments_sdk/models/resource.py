@@ -2,8 +2,16 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Literal, Optional, Union
 
-from pydantic import (AnyUrl, BaseModel, ConfigDict, Field, HttpUrl, RootModel,
-                      StringConstraints, conint, constr, field_validator)
+from pydantic import (
+    AnyUrl,
+    BaseModel,
+    ConfigDict,
+    Field,
+    HttpUrl,
+    RootModel,
+    conint,
+    field_validator,
+)
 
 
 class AssetCode(RootModel[str]):
@@ -59,12 +67,8 @@ class PageInfo(BaseModel):
         description="Cursor corresponding to the last element in the result array.",
         min_length=1
     )
-    hasNextPage: bool = Field(
-        ..., description="Describes whether the data set has further entries."
-    )
-    hasPreviousPage: bool = Field(
-        ..., description="Describes whether the data set has previous entries."
-    )
+    hasNextPage: bool = Field(..., description="Describes whether the data set has further entries.")
+    hasPreviousPage: bool = Field(..., description="Describes whether the data set has previous entries.")
 
 
 class PaymentMethod(Enum):
@@ -82,8 +86,6 @@ class IlpPaymentMethod(BaseModel):
         description="The ILP address to use when establishing a STREAM connection.",
         pattern=r"^(g|private|example|peer|self|test[1-3]?|local)([.][a-zA-Z0-9_~-]+)+$",
         max_length=1023,
-    ) = Field(
-        ..., description="The ILP address to use when establishing a STREAM connection."
     )
     sharedSecret: str = Field(
         ...,
@@ -113,24 +115,17 @@ class PublicIncomingPayment(BaseModel):
 
 
 class OutgoingPayment(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
     id: AnyUrl = Field(..., description="The URL identifying the outgoing payment.")
     walletAddress: AnyUrl = Field(
         ...,
         description="The URL of the wallet address from which this payment is sent.",
     )
-    quoteId: Optional[AnyUrl] = Field(
-        None, description="The URL of the quote defining this payment's amounts."
-    )
+    quoteId: Optional[AnyUrl] = Field(None, description="The URL of the quote defining this payment's amounts.")
     failed: Optional[bool] = Field(
         False,
         description="Describes whether the payment failed to send its full amount.",
     )
-    receiver: Receiver = Field(
-        ..., description="The URL of the incoming payment that is being paid."
-    )
+    receiver: Receiver = Field(..., description="The URL of the incoming payment that is being paid.")
     receiveAmount: Amount = Field(
         ...,
         description="The total amount that should be received by the receiver when this outgoing payment has been paid.",
@@ -158,16 +153,12 @@ class OutgoingPaymentWithSpentAmounts(BaseModel):
         ...,
         description="The URL of the wallet address from which this payment is sent.",
     )
-    quoteId: Optional[AnyUrl] = Field(
-        None, description="The URL of the quote defining this payment's amounts."
-    )
+    quoteId: Optional[AnyUrl] = Field(None, description="The URL of the quote defining this payment's amounts.")
     failed: Optional[bool] = Field(
         False,
         description="Describes whether the payment failed to send its full amount.",
     )
-    receiver: Receiver = Field(
-        ..., description="The URL of the incoming payment that is being paid."
-    )
+    receiver: Receiver = Field(..., description="The URL of the incoming payment that is being paid.")
     receiveAmount: Amount = Field(
         ...,
         description="The total amount that should be received by the receiver when this outgoing payment has been paid.",
@@ -192,12 +183,8 @@ class OutgoingPaymentWithSpentAmounts(BaseModel):
         None,
         description="Additional metadata associated with the outgoing payment. (Optional)",
     )
-    createdAt: datetime = Field(
-        ..., description="The date and time when the outgoing payment was created."
-    )
-    updatedAt: datetime = Field(
-        ..., description="The date and time when the outgoing payment was updated."
-    )
+    createdAt: datetime = Field(..., description="The date and time when the outgoing payment was created.")
+    updatedAt: datetime = Field(..., description="The date and time when the outgoing payment was updated.")
 
 
 class Quote(BaseModel):
@@ -226,9 +213,7 @@ class Quote(BaseModel):
         None,
         description="The date and time when the calculated `debitAmount` is no longer valid.",
     )
-    createdAt: datetime = Field(
-        ..., description="The date and time when the quote was created."
-    )
+    createdAt: datetime = Field(..., description="The date and time when the quote was created.")
 
 
 class IncomingPayment(BaseModel):
@@ -276,10 +261,9 @@ class IncomingPaymentRequest(BaseModel):
     metadata: Optional[Dict[str, Any]] = None
 
 
-class IncomingPaymentResponse(
-    RootModel[Union[PublicIncomingPayment, IncomingPaymentWithMethods]]
-):
+class IncomingPaymentResponse(RootModel[Union[PublicIncomingPayment, IncomingPaymentWithMethods]]):
     pass
+
 
 class PaymentListQuery(BaseModel):
     walletAddress: WalletAddress
@@ -313,9 +297,7 @@ class OutgoingPaymentRequestWithIncoming(BaseModel):
     metadata: Optional[Dict[str, Any]]
 
 
-class OutgoingPaymentRequest(
-    RootModel[Union[OutgoingPaymentRequestWithIncoming, OutgoingPaymentRequestWithQuote]]
-):
+class OutgoingPaymentRequest(RootModel[Union[OutgoingPaymentRequestWithIncoming, OutgoingPaymentRequestWithQuote]]):
     pass
 
 
@@ -344,8 +326,5 @@ class QuoteFixedSent(QuoteRequestBase):
     debitAmount: Amount
 
 
-
-class QuoteRequest(
-    RootModel[Union[QuoteRequestBase, QuoteFixedSent, QuoteFixedReceive]]
-):
+class QuoteRequest(RootModel[Union[QuoteRequestBase, QuoteFixedSent, QuoteFixedReceive]]):
     pass
