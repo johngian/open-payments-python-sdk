@@ -7,6 +7,7 @@ from logging import Logger
 from typing import Sequence
 from http_message_signatures import HTTPMessageSigner, algorithms
 import http_sfv
+from http_sf import ser
 from httpx import Request
 from open_payments_sdk.gnap_utils.hash import HashManager
 from open_payments_sdk.gnap_utils.http_signatures import OPKeyResolver, PatchedHTTPSignatureComponentResolver
@@ -49,6 +50,6 @@ class SecurityBase():
         """
         Compute Digest
         """
-        request.headers["Content-Digest"] = str(http_sfv.Dictionary({"sha-512": hashlib.sha512(request.content).digest()}))
+        request.headers["Content-Digest"] = ser({"sha-512": hashlib.sha512(request.content).digest()})
         return request
     
