@@ -14,7 +14,7 @@ from open_payments_sdk.gnap_utils.http_signatures import OPKeyResolver, PatchedH
 from open_payments_sdk.gnap_utils.keys import KeyManager
 
 
-class SecurityBase():
+class SecurityBase:
     """
     Base class to provide shared functionality for making authenticated requests
     """
