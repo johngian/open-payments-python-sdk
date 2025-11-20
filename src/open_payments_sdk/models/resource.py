@@ -333,6 +333,7 @@ class QuoteRequestBase(BaseModel):
     @classmethod
     def check_path(cls, v):
         assert "/incoming-payments/" in v.path
+        return v
 
 
 class QuoteFixedReceive(QuoteRequestBase):
