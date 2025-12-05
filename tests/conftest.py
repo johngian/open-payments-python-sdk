@@ -1,6 +1,9 @@
 import pytest
+
 from open_payments_sdk.client.client import OpenPaymentsClient
+from open_payments_sdk.process.models.process import SellerOpenPaymentAccount
 from open_payments_sdk.models.auth import GrantRequest
+from config import settings
 
 @pytest.fixture
 def keyid_private_key() -> dict:
@@ -73,7 +76,6 @@ def grant_req_dto() -> GrantRequest:
     }
     return GrantRequest(**grant_req)
 
-
 @pytest.fixture
 def interactive_grant_req_dto() -> GrantRequest:  # TODO complete writing tests
     """
@@ -81,3 +83,20 @@ def interactive_grant_req_dto() -> GrantRequest:  # TODO complete writing tests
     """
     grant_req = {}
     return GrantRequest(**grant_req)
+
+###################################################################################################
+# PROCESS TEST FIXTURES
+###################################################################################################
+
+@pytest.fixture
+def op_seller_account() -> SellerOpenPaymentAccount:
+    if not settings.TEST_SELLER_WALLET or not settings.TEST_SELLER_KEY or not settings.TEST_SELLER_KEY_ID:
+        raise ValueError("Test Seller settings are required.")
+    return SellerOpenPaymentAccount(
+        **{
+            "walletAddressUrl": settings.TEST_SELLER_WALLET,
+            "privateKey": settings.TEST_SELLER_KEY,
+            "keyId": settings.TEST_SELLER_KEY_ID,
+        }
+    )
+
